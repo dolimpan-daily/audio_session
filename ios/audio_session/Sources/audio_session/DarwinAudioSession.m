@@ -90,6 +90,10 @@ static NSHashTable<DarwinAudioSession *> *sessions = nil;
         [self getInputLatency:args result:result];
     } else if ([@"getOutputLatency" isEqualToString:call.method]) {
         [self getOutputLatency:args result:result];
+    } else if ([@"getPreferredIoBufferDuration" isEqualToString:call.method]) {
+        [self getPreferredIoBufferDuration:args result:result];
+    } else if ([@"setPreferredIoBufferDuration" isEqualToString:call.method]) {
+        [self setPreferredIoBufferDuration:args result:result];
     } else if ([@"getInputGain" isEqualToString:call.method]) {
         [self getInputGain:args result:result];
     } else if ([@"setInputGain" isEqualToString:call.method]) {
@@ -521,6 +525,22 @@ static NSHashTable<DarwinAudioSession *> *sessions = nil;
 
 - (void)getOutputLatency:(NSArray *)args result:(FlutterResult)result {
     result(@((long long)([[AVAudioSession sharedInstance] outputLatency] * 1000000.0)));
+}
+
+- (void)getPreferredIoBufferDuration:(NSArray *)args result:(FlutterResult)result {
+    result(@((long long)([[AVAudioSession sharedInstance] preferredIOBufferDuration] * 1000000.0)));
+}
+
+- (void)setPreferredIoBufferDuration:(NSArray *)args result:(FlutterResult)result {
+    NSError *error = nil;
+    NSNumber *durationMicros = (NSNumber *)args[0];
+    NSTimeInterval duration = durationMicros.longLongValue / 1000000.0;
+    [[AVAudioSession sharedInstance] setPreferredIOBufferDuration:duration error:&error];
+    if (error) {
+        [self sendError:error result:result];
+    } else {
+        result(nil);
+    }
 }
 
 - (void)getInputGain:(NSArray *)args result:(FlutterResult)result {

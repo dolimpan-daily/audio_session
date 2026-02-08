@@ -344,11 +344,18 @@ class AVAudioSession {
   //  return Duration.zero;
   //}
 
-  //Future<Duration> get preferredIoBufferDuration async {
-  //  return Duration.zero;
-  //}
+  /// (UNTESTED)
+  Future<Duration> get preferredIoBufferDuration async {
+    return Duration(
+        microseconds: (await _channel
+            .invokeMethod<int>('getPreferredIoBufferDuration', <dynamic>[]))!);
+  }
 
-  //Future<void> setPreferredIoBufferDuration(Duration duration) async {}
+  /// (UNTESTED)
+  Future<void> setPreferredIoBufferDuration(Duration duration) async {
+    await _channel.invokeMethod(
+        'setPreferredIoBufferDuration', [duration.inMicroseconds]);
+  }
 
   //Future<bool> setAggregatedIoPreference(AVAudioSessionIOType type) async {
   //  return true;

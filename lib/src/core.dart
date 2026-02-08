@@ -332,6 +332,20 @@ class AudioSession {
     return devices;
   }
 
+  /// Gets the preferred I/O buffer duration.
+  ///
+  /// On iOS this returns [AVAudioSession.preferredIoBufferDuration].
+  /// On Android and other platforms this returns [Duration.zero].
+  Future<Duration> get preferredIoBufferDuration async =>
+      (await _avAudioSession?.preferredIoBufferDuration) ?? Duration.zero;
+
+  /// Sets the preferred I/O buffer duration.
+  ///
+  /// On iOS this forwards to [AVAudioSession.setPreferredIoBufferDuration].
+  /// On Android and other platforms this is a no-op.
+  Future<void> setPreferredIoBufferDuration(Duration duration) async =>
+      _avAudioSession?.setPreferredIoBufferDuration(duration);
+
   static AudioDeviceType _darwinPort2type(AVAudioSessionPort port,
       {Set<AVAudioSessionPortDescription> inputPorts = const {}}) {
     switch (port) {
